@@ -48,7 +48,7 @@ def echo(bot):
         if update.message.text == 'love':
             text = 'Saltanat i love you'
         else:
-            text = ""
+            text = "напиши love"
         if update.message:  # your bot can receive updates without messages
             # Reply to the message
 
