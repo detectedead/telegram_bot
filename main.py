@@ -57,3 +57,48 @@ def echo(bot):
 
 if __name__ == '__main__':
     main()
+
+import requests
+from bs4 import BeautifulSoup
+import csv
+
+HOST = 'https://alser.kz/'
+URL = 'https://alser.kz/c/knopochnye-telefony'
+HEADERS = {
+    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36'
+}
+
+def get_html(URL, params=''):
+    r = requests.get(URL, headers=HEADERS, params=params)
+    return r
+
+def get_content(html):
+    soup = BeautifulSoup(html, 'html.parser')
+    items = soup.find_all('div', class_='good-item-in')
+    telefon = []
+
+    for item in items:
+        telefon.append(
+            {
+                'title':item.find('div', class_='good-item-title.text--black').get_text(strip=True),
+                'link_product': HOST + item.find('div', class_='title').find('a').get('href'),
+                'brand': item.find('div', class_='brand').get_text(strip=True),
+                'telephone_img': HOST + item.find('div', class_='image').find('img').get('src')
+            }
+        )
+    return telefon
+
+def parser():
+    PAGENATION = input('Укажите количество страниц для парсинга: ')
+    PAGENATION = int(PAGENATION.strip())
+    html = get_html(URL)
+    if html.status_code == 200:
+        telefon = []
+
+        pass
+    else:
+        print('Error')
+
+parser()
+
